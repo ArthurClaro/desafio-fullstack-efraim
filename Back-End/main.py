@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware  # Import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware  
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 import psycopg2
 
-from fastapi_socketio import SocketManager  # <-- Import do Socket.IO manager
+from fastapi_socketio import SocketManager 
 
 
 # Carregar variáveis do arquivo .env
@@ -13,13 +13,12 @@ load_dotenv()
 
 # Recuperar variáveis de ambiente
 DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT")  # geralmente 5432
+DB_PORT = os.getenv("DB_PORT") 
 DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 
-# Conexão com o banco de dados (psycopg2)
-# Em produção, o ideal é tratar exceções e gerenciar conexão de forma robusta (pool, etc.)
+
 conn = psycopg2.connect(
     host=DB_HOST, port=DB_PORT, dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD
 )
@@ -50,16 +49,15 @@ app.add_middleware(
     # ],  # Allows the specific origin of your React app
     allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],  
+    allow_headers=["*"],  
 )
 
 # 6) Iniciar o gerenciador de Socket.IO dentro do FastAPI
-# Monte o SocketManager dizendo explicitamente o “path”
 socket_manager = SocketManager(
     app=app,
     cors_allowed_origins=["http://localhost:5173", "*"],
-    mount_location="/socket.io",  # importante: monte em /socket.io
+    mount_location="/socket.io", 
 )
 
 
@@ -99,7 +97,6 @@ async def create_task(task: TaskCreate):
         new_task = cursor.fetchone()
         conn.commit()
 
-    # Montar resposta em dicionário
     created_task = {
         "id": new_task[0],
         "titulo": new_task[1],
@@ -109,8 +106,6 @@ async def create_task(task: TaskCreate):
         "data_atualizacao": str(new_task[5]),
     }
 
-    # Emite um evento Socket.IO chamado "task_created"
-    # Qualquer cliente conectado que escutar esse evento será notificado.
     await socket_manager.emit("task_created", created_task)
 
     return created_task
@@ -174,7 +169,6 @@ async def update_task(task_id: int, data: TaskUpdate):
         "data_atualizacao": str(updated[5]),
     }
 
-    # Emite um evento "task_updated"
     await socket_manager.emit("task_updated", updated_task)
 
     return updated_task
@@ -198,7 +192,6 @@ async def delete_task(task_id: int):
     if not deleted:
         return {"error": "Tarefa não encontrada."}
 
-    # Emite um evento "task_deleted"
     await socket_manager.emit("task_deleted", {"id": task_id})
 
     return {"message": f"Tarefa {task_id} deletada com sucesso."}
@@ -207,8 +200,6 @@ async def delete_task(task_id: int):
 # -------------------------------
 # EVENTOS SOCKET.IO (opcionais)
 # -------------------------------
-# Podemos definir eventos de conexão e desconexão também:
-
 
 @app.get("/")
 async def root():

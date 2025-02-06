@@ -16,9 +16,6 @@ function HomeSec() {
         <>
             <Header />
             <main className="container main">
-                {/* <div className="p-5 space-y-2 bg-gray-100">
-                    <Button>Click me</Button>
-                </div> */}
                 <FormSec />
                 <ListTasks />
             </main>

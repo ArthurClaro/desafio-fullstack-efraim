@@ -30,7 +30,6 @@ function FormSec() {
         resolver: zodResolver(createTaskSchema),
     });
 
-    // Sempre que `selectedTask` mudar, resetamos o form com os dados da tarefa
     useEffect(() => {
         if (selectedTask) {
             reset({
@@ -39,7 +38,6 @@ function FormSec() {
                 status: selectedTask.status,
             });
         } else {
-            // Se não há tarefa selecionada, form volta a ficar vazio
             reset({
                 titulo: "",
                 descricao: "",
@@ -48,26 +46,19 @@ function FormSec() {
         }
     }, [selectedTask, reset]);
 
-    // Handle submit: cria ou atualiza
     const onSubmit = async (formData) => {
         try {
             if (selectedTask) {
-                // Modo edição
                 await updateTask(selectedTask.id, formData);
-                // Após atualizar, podemos limpar o "selectedTask"
                 toastSuccess('Atualizado', 3000)
                 setSelectedTask(null);
             } else {
-                // Modo criação
                 await createTask(formData);
                 toastSuccess('Criado', 3000)
             }
-
-            // Reseta o formulário
             reset();
         } catch (error) {
             console.error(error);
-            // Se quiser, exiba um toast de erro
         }
     };
 

@@ -30,39 +30,18 @@ export const UserProvider = ({ children }) => {
     }
 
 
-    // const socket = io("https://desafio-fullstack-efraim.onrender.com", {
-    //     transports: ["websocket"],
-    //   });
-
-    // Para sockets, você precisa de outra URL (string), ex:
-    // const socket = io("http://127.0.0.1:8000", {
-    //     path: "/socket.io",               // idêntico ao mount_location do backend
-    //     transports: ["websocket", "polling"]
-    // });
-    // // socket.on("connect", () => {
-    // //     console.log("Socket conectado. ID:", socket.id);
-    // // });
-    // // socket.on("disconnect", () => {
-    // //     console.log("Socket desconectado!");
-    // // });
-
-
 
     const navigate = useNavigate();
-
-
-    // Guardar as tasks em um estado local
     const [tasks, setTasks] = useState([]);
-
-
     const [selectedTask, setSelectedTask] = useState(null);
 
 
 
     const socket = useMemo(
         () =>
-            io("http://127.0.0.1:8000", {
-                path: "/socket.io", // tem que bater com mount_location do backend
+            // io("http://127.0.0.1:8000", {
+                io("https://desafio-fullstack-efraim.onrender.com", {
+                path: "/socket.io", 
                 transports: ["websocket", "polling"],
             }),
         []
@@ -100,10 +79,7 @@ export const UserProvider = ({ children }) => {
             console.log("Socket.IO desconectado!");
         });
 
-        // Cleanup quando componente desmontar (ou re-montar em StrictMode)
         return () => {
-            // Em dev com StrictMode, esse disconnect vai ser chamado 2x.
-            // Em produção ele só roda quando o Provider sair de cena mesmo.
             socket.disconnect();
         };
     }, [socket]);
@@ -196,16 +172,15 @@ export const UserProvider = ({ children }) => {
 
     return (
         <UserContext.Provider value={{
-            tasks,        // para usar a lista de tarefas no front
+            tasks,        
             createTask,
             listTasks,
             updateTask,
             deleteTask,
 
-            // Edição
-            selectedTask,    // a tarefa que está sendo editada
-            setSelectedTask, // se quiser limpar depois
-            startEditing,    // função p/ iniciar edição
+            selectedTask,    
+            setSelectedTask, 
+            startEditing,    
             toastSuccess
         }}>
             {children}
