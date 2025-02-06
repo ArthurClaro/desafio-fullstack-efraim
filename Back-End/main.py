@@ -57,8 +57,11 @@ app.add_middleware(
 socket_manager = SocketManager(
     app=app,
     # cors_allowed_origins=["http://localhost:5173", "*"],
-    # cors_allowed_origins=["https://desafio-fullstack-pi.vercel.app/", "*"],
-    cors_allowed_origins=["*", "https://desafio-fullstack-pi.vercel.app/"],
+    cors_allowed_origins=[
+        "http://localhost:5173",
+        "https://desafio-fullstack-pi.vercel.app",
+        "https://desafio-fullstack-efraim.onrender.com",
+    ],
     mount_location="/socket.io",
 )
 
