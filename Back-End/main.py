@@ -56,7 +56,8 @@ app.add_middleware(
 # 6) Iniciar o gerenciador de Socket.IO dentro do FastAPI
 socket_manager = SocketManager(
     app=app,
-    cors_allowed_origins=["http://localhost:5173", "*"],
+    # cors_allowed_origins=["http://localhost:5173", "*"],
+    cors_allowed_origins=["https://desafio-fullstack-pi.vercel.app/", "*"],
     mount_location="/socket.io", 
 )
 
