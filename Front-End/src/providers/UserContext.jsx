@@ -42,7 +42,9 @@ export const UserProvider = ({ children }) => {
             // io("http://127.0.0.1:8000", {
                 io("https://desafio-fullstack-efraim.onrender.com", {
                 path: "/socket.io", 
-                transports: ["websocket", "polling"],
+                // transports: ["websocket", "polling"],
+                transports: ["websocket"], // sem "polling"
+
             }),
         []
     );

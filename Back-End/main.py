@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware  
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 import psycopg2
 
-from fastapi_socketio import SocketManager 
+from fastapi_socketio import SocketManager
 
 
 # Carregar variáveis do arquivo .env
@@ -13,7 +13,7 @@ load_dotenv()
 
 # Recuperar variáveis de ambiente
 DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT") 
+DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
@@ -49,16 +49,17 @@ app.add_middleware(
     # ],  # Allows the specific origin of your React app
     allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  
-    allow_headers=["*"],  
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # 6) Iniciar o gerenciador de Socket.IO dentro do FastAPI
 socket_manager = SocketManager(
     app=app,
     # cors_allowed_origins=["http://localhost:5173", "*"],
-    cors_allowed_origins=["https://desafio-fullstack-pi.vercel.app/", "*"],
-    mount_location="/socket.io", 
+    # cors_allowed_origins=["https://desafio-fullstack-pi.vercel.app/", "*"],
+    cors_allowed_origins=["*", "https://desafio-fullstack-pi.vercel.app/"],
+    mount_location="/socket.io",
 )
 
 
@@ -201,6 +202,7 @@ async def delete_task(task_id: int):
 # -------------------------------
 # EVENTOS SOCKET.IO (opcionais)
 # -------------------------------
+
 
 @app.get("/")
 async def root():
